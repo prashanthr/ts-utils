@@ -1,0 +1,19 @@
+{
+    "jsc": {
+        "parser": {
+            "syntax": "typescript",
+            "tsx": false,
+            "dynamicImport": true
+        },
+        "transform": {
+        },
+        "target": "esnext",
+    },
+    "module": {
+        "type": "commonjs"
+    },
+    "exclude": [
+        "src/examples/**/*.ts",
+        "src/test/**/*.ts"
+    ]
+}
