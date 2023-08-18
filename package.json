@@ -9,7 +9,7 @@
   "scripts": {
     "build": "pnpm run clean && concurrently 'pnpm run lint' 'tsc --incremental --noEmit' 'swc src -d dist'",
     "clean": "rm -rf ./dist",
-    "publish": "npm install --include=dev && pnpm run clean && pnpm run build",
+    "publish": "rm -rf ./node_modules && npm install --include=dev && pnpm run clean && pnpm run build && pnpm pack",
     "test": "vitest --run --dir 'src/test'",
     "test:ui": "vitest --ui --coverage --dir 'src/test'",
     "lint": "eslint --fix './src/**/*.ts'",
