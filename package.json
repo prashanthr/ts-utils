@@ -7,7 +7,7 @@
     "dist/lib"
   ],
   "scripts": {
-    "build": "concurrently 'pnpm run lint' 'tsc --incremental --noEmit' 'swc src -d dist'",
+    "build": "pnpm run clean && concurrently 'pnpm run lint' 'tsc --incremental --noEmit' 'swc src -d dist'",
     "clean": "rm -rf ./dist",
     "publish": "npm install --include=dev && pnpm run clean && pnpm run build",
     "test": "vitest --run --dir 'src/test'",
@@ -33,6 +33,8 @@
     "@vitest/ui": "^0.34.2",
     "concurrently": "^8.2.0",
     "eslint": "^8.47.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
     "prettier": "^3.0.2",
     "typescript": "^5.1.6",
     "vitest": "^0.34.2"

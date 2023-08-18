@@ -13,7 +13,7 @@
         "type": "commonjs"
     },
     "exclude": [
-        "src/examples/**/*.ts",
-        "src/test/**/*.ts"
+        "examples",
+        "test"
     ]
 }
