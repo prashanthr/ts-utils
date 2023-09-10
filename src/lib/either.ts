@@ -1,4 +1,4 @@
-/* Core Utility Types */
+// either.ts
 export type Right<T> = { value: T }
 export type Left<E> = { error: E }
 export type Either<E, T> = Right<T> | Left<E>

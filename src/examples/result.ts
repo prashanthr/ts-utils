@@ -1,78 +1,77 @@
-import {
-    Result,
-    ok,
-    err,
-    matchResult,
-    matchResultF,
-    ResultMatchers,
-} from '../lib/index'
+import { ok, err, matchResultF, Result } from '../lib'
+import { andThen, pipe } from 'ramda'
 
-const okFn = (): Result<number> => {
-    const value: number = 1
-    return ok(value)
-}
+// RESULT
+const okFn = (): Result<number, Error> => ok(1)
+const errFn = (): Result<number, Error> => err(new Error('bad'))
+const rinputFn = (input: number) => input
 
-const errFn = (): Result<number> => {
-    const error: Error = new Error('i am an error')
-    return err(error)
-}
+console.log(`[RESULT] okFn is ${JSON.stringify(okFn())}`)
+console.log(`[RESULT] errFn ${JSON.stringify(errFn())}`)
 
-const okOrErrFn = (): Result<number> => {
-    const sources = [okFn, errFn]
-    return sources[Math.floor(Math.random() * sources.length)]()
-}
+const rsyncPipeline1 = pipe(
+    okFn,
+    matchResultF<number, Error, number, Error>({
+        ok: (result) => rinputFn(result),
+        err: (err) => err,
+    }),
+) // { value: 1 } => rinputFn(1) => 1
 
-const okPromise = async (): Promise<Result<number>> => Promise.resolve(okFn())
-const errPromise = async (): Promise<Result<number>> => Promise.resolve(errFn())
-const anyPromise = async (): Promise<Result<number>> =>
-    Promise.resolve(okOrErrFn())
+const rsyncPipeline2 = pipe(
+    errFn,
+    matchResultF<number, Error, number, Error>({
+        ok: (result) => rinputFn(result),
+        err: (err) => err,
+    }),
+) // { error: Error('bad') } => Error('bad')
 
-// Basic usage - Functional
-const resultOkMatchF = matchResultF({
-    ok: (r) => r,
-    err: (e) => e,
-})(okFn())
+console.log(`[RESULT] rsyncPipeline1 is ${JSON.stringify(rsyncPipeline1())}`)
+console.log(`[RESULT] rsyncPipeline2 is ${JSON.stringify(rsyncPipeline2())}`)
 
-const resultErrMatchF = matchResultF({
-    ok: (r) => r,
-    err: (e) => e,
-})(errFn())
+const rrightPromise = (): Promise<Result<number, Error>> =>
+    Promise.resolve(okFn())
+const rleftPromise = (): Promise<Result<number, Error>> =>
+    Promise.resolve(errFn())
 
-// Basic usage - non-functional
-const resultOkMatch = matchResult({
-    result: okFn(),
-    matchers: { ok: (r) => r, err: (e) => e },
-})
+const rinputPromise = async (input: any) => Promise.resolve(input)
 
-const resultErrMatch = matchResult({
-    result: errFn(),
-    matchers: { ok: (r) => r, err: (e) => e },
-})
+const rasyncPipeline1 = pipe(
+    rrightPromise,
+    andThen(
+        matchResultF<number, Error, number, Error>({
+            ok: (result) => result,
+            err: (err) => err,
+        }),
+    ),
+) // { value: 1 } => 1
 
-// Generic handling
-const anyOrErrorMatchHandler: ResultMatchers<any, Error, any, Error> = {
-    ok: (r: any) => r,
-    err: (e: Error) => e,
-}
-const resultUnknownF = matchResultF(anyOrErrorMatchHandler)(okOrErrFn())
+const rasyncPipeline2 = pipe(
+    rleftPromise,
+    andThen(
+        matchResultF<number, Error, number, Error>({
+            ok: (result) => result,
+            err: (err) => err,
+        }),
+    ),
+) // { error: Error('bad') } => Error('bad')
 
-// Promises
-matchResultF({
-    ok: (r: number) => r,
-    err: (e: Error) => e,
-})(await okPromise())
+const rasyncPipeline3 = pipe(
+    rrightPromise,
+    andThen(rinputPromise),
+    andThen(
+        matchResultF<number, Error, number, Error>({
+            ok: (result) => result,
+            err: (err) => err,
+        }),
+    ),
+) // { value: 1 } => rinput(1) => 1
 
-matchResultF({
-    ok: (r: number) => r,
-    err: (e: Error) => e,
-})(await errPromise())
-
-matchResult({
-    result: await anyPromise(),
-    matchers: {
-        ok: (r: number) => r,
-        err: (e: Error) => e,
-    },
-})
-
-// Chaining
+rasyncPipeline1().then((result) =>
+    console.log(`[RESULT] rasyncPipeline1 is ${JSON.stringify(result)}`),
+)
+rasyncPipeline2().then((result) =>
+    console.log(`[RESULT] rasyncPipeline2 is ${result}`),
+)
+rasyncPipeline3().then((result) =>
+    console.log(`[RESULT] rasyncPipeline3 is ${JSON.stringify(result)}`),
+)

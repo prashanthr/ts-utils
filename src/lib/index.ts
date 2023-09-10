@@ -1,3 +1,14 @@
+// index.ts
+
+// Option
+export type { Option, Some, None, Matchers as OptionMatchers } from './option'
+export {
+     some,
+     none,
+     match as matchOption,
+     matchF as matchOptionF,
+} from './option'
+
 // Result
 export type { Result, Ok, Err, Matchers as ResultMatchers } from './result'
 export { ok, err, match as matchResult, matchF as matchResultF } from './result'
