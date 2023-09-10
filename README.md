@@ -13,7 +13,7 @@ A typescript utility library to demonstrate functional programming concepts by r
 Examples can be found [here](./src/examples/)
 
 ## Tests
-The tests can be foudn [here](./src/test/)
+The tests can be found [here](./src/test/)
 
 ```
 pnpm run test
