@@ -1,5 +1,5 @@
 {
-  "name": "@universal-apps/ts-utils",
+  "name": "@prashanthr/ts-utils",
   "version": "1.0.0",
   "description": "A universal typescript utlitiy library",
   "main": "dist/lib/index.js",
