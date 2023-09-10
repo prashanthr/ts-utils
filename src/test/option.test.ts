@@ -14,21 +14,21 @@ describe('Option', () => {
         const n: Option<number> = none()
         assert(typeof s === typeof n)
     })
-    test('match left', async () => {
+    test('match none', async () => {
         const result = matchOptionF({
             none: () => 'default',
             some: (value: number) => value + 1,
         })(none())
         assert(result === 'default')
     })
-    test('match right', async () => {
+    test('match some', async () => {
         const result = matchOptionF({
             none: () => 'default',
             some: (value: number) => value + 1,
         })(some(1))
         assert(result === 2)
     })
-    test('match promise left', async () => {
+    test('match promise none', async () => {
         const p = pipe(
             () => Promise.resolve(none()),
             andThen(
@@ -41,7 +41,7 @@ describe('Option', () => {
         const result = await p()
         assert(result === 'default')
     })
-    test('match promise right', async () => {
+    test('match promise some', async () => {
         const p = pipe(
             () => Promise.resolve(some(1)),
             andThen(
