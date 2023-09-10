@@ -4,7 +4,9 @@ A typescript utility library to demonstrate functional programming concepts by r
 ## Library
 
 [Option types](./src/lib/option.ts)
+
 [Either types](./src/lib/either.ts)
+
 [Result types](./src/lib/result.ts)
 
 ## Examples
@@ -25,8 +27,12 @@ Inspired by [this article](https://imhoff.blog/posts/using-results-in-typescript
 ## Resources
 
 [fp-ts](https://github.com/gcanti/fp-ts) library
+
 [EffectTS](https://github.com/Effect-TS/effect) library
+
 [pratica](https://github.com/rametta/pratica)
+
 [Functional Programming Series](https://www.youtube.com/playlist?list=PLuPevXgCPUIMbCxBEnc1dNwboH6e2ImQo) on Youtube
+
 
 
