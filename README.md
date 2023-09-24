@@ -3,8 +3,12 @@ A typescript utility library to help utilize functional programming concepts by 
 
 # Installation
 
+[NPM package](https://www.npmjs.com/package/@universal-apps/ts-utils)
+
 ```
 npm i @universal-apps/ts-utils
+# OR
+pnpm i @universal-apps/ts-utils 
 ```
 
 ## Library
@@ -105,6 +109,7 @@ Inspired by [this article](https://imhoff.blog/posts/using-results-in-typescript
 ## Publishing
 
 ```
+pnpm version <major|minor|patch>
 pnpm publish --dry-run --publish-branch <current-branch>
 pnpm publish
 ```
