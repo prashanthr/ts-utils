@@ -8,7 +8,7 @@
     "dist/lib"
   ],
   "scripts": {
-    "build": "pnpm run clean && concurrently 'pnpm run lint' 'tsc --incremental'",
+    "build": "pnpm run clean && concurrently 'pnpm run lint' 'tsc'",
     "clean": "rm -rf ./dist",
     "prepublishOnly": "rm -rf ./node_modules && pnpm install && pnpm run build && pnpm pack",
     "test": "vitest --run --dir 'src/test'",
