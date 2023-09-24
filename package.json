@@ -10,7 +10,7 @@
   "scripts": {
     "build": "pnpm run clean && concurrently 'pnpm run lint' 'tsc --incremental'",
     "clean": "rm -rf ./dist",
-    "prepublishOnly": "rm -rf ./node_modules && npm install --include=dev && pnpm run build && pnpm pack",
+    "prepublishOnly": "rm -rf ./node_modules && pnpm install && pnpm run build && pnpm pack",
     "test": "vitest --run --dir 'src/test'",
     "test:ui": "vitest --ui --coverage --dir 'src/test'",
     "lint": "eslint --fix './src/**/*.ts'",
