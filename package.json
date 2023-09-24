@@ -1,7 +1,7 @@
 {
   "name": "@prashanthr/ts-utils",
   "version": "1.0.0",
-  "description": "A TS utility library with monad types and functions for functional programming",
+  "description": "A Typescript utility library with some utility functions to level up your dev ex using functional programming",
   "main": "dist/lib/index.js",
   "files": [
     "dist/lib"

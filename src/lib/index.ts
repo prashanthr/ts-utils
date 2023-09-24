@@ -3,10 +3,10 @@
 // Option
 export type { Option, Some, None, Matchers as OptionMatchers } from './option'
 export {
-     some,
-     none,
-     match as matchOption,
-     matchF as matchOptionF,
+    some,
+    none,
+    match as matchOption,
+    matchF as matchOptionF,
 } from './option'
 
 // Result
@@ -21,3 +21,13 @@ export {
     match as matchEither,
     matchF as matchEitherF,
 } from './either'
+
+// Result Tuple
+export type {
+    EmptyResult,
+    MaybeResult,
+    MaybeError,
+    ResultTuple,
+    TupleArgs,
+} from './result-tuple'
+export { toTuple } from './result-tuple'
