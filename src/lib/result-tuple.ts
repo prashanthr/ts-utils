@@ -12,14 +12,14 @@ export type TupleArgs<T, E = Error> = {
 }
 
 /**
- * Returns a 2 element tuple with
+ * Utility fn that returns a 2 element tuple with
  * the result as the first element and
- * the error as the second element
+ * the error as the second element.
+ * No validation is done and you get what you pass in
  * @param args { result?: T, error?: E = Error }. Note: Both arguments are optional
  * @returns TupleResult i.e. [T, E]
  */
 export const toTuple = <T, E = Error>(
     args: TupleArgs<T, E>,
-): ResultTuple<T, E> => {
-    return [args.result, args.error]
-}
+    strict: boolean = false,
+): ResultTuple<T, E> => [args.result, args.error]

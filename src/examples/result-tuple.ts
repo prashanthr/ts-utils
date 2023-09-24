@@ -26,7 +26,7 @@ const resultTuple4: ResultTuple<number, Error> = [undefined, new Error('e')]
 const resultTuple5: ResultTuple<number, Error, 'baz'> = [1, 'baz']
 const resultTuple6: ResultTuple<number, Error, 'baz'> = ['baz', new Error('e')]
 
-const fn = (): ResultTuple<number> => {
+const fn1 = (): ResultTuple<number> => {
     return toTuple({ result: 1 }) // [1, undefined]
 }
 
@@ -40,4 +40,12 @@ const fn3 = (): ResultTuple<number> => {
 
 const fn4 = (): ResultTuple<number> => {
     return toTuple({}) // [undefined, undefined]
+}
+
+const fn5 = (): ResultTuple<number, Error> => {
+    return toTuple({}) // [undefined, undefined]
+}
+
+const fn6 = (): ResultTuple<number, 'baz'> => {
+    return toTuple({ error: 'baz' }) // [undefined, baz]
 }
