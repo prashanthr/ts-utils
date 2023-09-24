@@ -24,13 +24,36 @@ npm i @universal-apps/ts-utils
 const someValue: Option<number> = some(1) // { value: 1 }
 const noValue: Option<number> = none() // {}
 
+// Utilities to match on the Option type
+matchOptionF({
+    some: (value) => value,
+    none: () => undefined,
+})(someValue)
+
 // Either
 const rightFn = (): Either<Error, number> => right(1) // { value: 1 }
 const leftFn = (): Either<Error, number> => left(new Error('bad')) // { error: Error('bad) }
 
+// Utilities to match on the Either type
+matchEitherF<Error, number, Error, number>({
+    right: (result) => result,
+    left: (err) => err,
+})(rightFn)
+
 // Result
 const okFn = (): Result<number, Error> => ok(1)
 const errFn = (): Result<number, Error> => err(new Error('bad'))
+
+// Utilities to match on the Result type
+matchResultF({
+    ok: (result) => result,
+    err: (err) => err,
+})(okFn())
+// OR
+matchResultF<number, Error, number, Error>({
+    ok: (result) => result,
+    err: (err) => err,
+})(okFn())
 
 // Result Tuple
 const result: MaybeResult<number> = 1
