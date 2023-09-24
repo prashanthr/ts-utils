@@ -57,4 +57,19 @@ describe('Result Tuple', () => {
         assert(unwrapped[0] === result)
         assert(unwrapped[1] === undefined)
     })
+    test('Promise usage', async () => {
+        const number: number = 1
+        const anError: Error = new Error('e')
+        const aResultPromise = async (): Promise<ResultTuple<number>> =>
+            Promise.resolve(toTuple({ result: 1 }))
+        const anErrorPromise = async (): Promise<ResultTuple<number>> =>
+            Promise.resolve(toTuple({ error: anError }))
+
+        const [result, error] = await aResultPromise()
+        assert(error === undefined)
+        assert(result === number)
+        const [result2, error2] = await anErrorPromise()
+        assert(result2 === undefined)
+        assert(error2 === anError)
+    })
 })

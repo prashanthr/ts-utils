@@ -49,3 +49,15 @@ const fn5 = (): ResultTuple<number, Error> => {
 const fn6 = (): ResultTuple<number, 'baz'> => {
     return toTuple({ error: 'baz' }) // [undefined, baz]
 }
+
+const aPromise = async (): Promise<ResultTuple<number>> =>
+    Promise.resolve(toTuple({ result: 1 }))
+
+const fn7 = async (): Promise<any> => {
+    const [result, error] = await aPromise()
+    if (error) {
+        // do something with error
+    } else {
+        // do something with result
+    }
+}
