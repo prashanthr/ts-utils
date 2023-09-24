@@ -1,13 +1,20 @@
 # ts-utils
-A typescript utility library to demonstrate functional programming concepts by re-creating monads like Option (Scala), Either (Scala) and Result (Rust) in Typescript.
+A typescript utility library to help utilize functional programming concepts by re-creating monads like Option (Scala), Either (Scala) and Result (Rust) in Typescript.
+
+# Installation
+
+```
+npm i @universal-apps/ts-utils
+```
 
 ## Library
 
 [Option types](./src/lib/option.ts)
 [Either types](./src/lib/either.ts)
 [Result types](./src/lib/result.ts)
+[Result tuple types](./src/lib/result-tuple.ts)
 
-## Examples
+## Usage Examples
 Examples can be found [here](./src/examples/)
 
 ## Tests
