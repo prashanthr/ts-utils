@@ -62,15 +62,15 @@ matchResultF<number, Error, number, Error>({
 // Result Tuple
 const result: MaybeResult<number> = 1
 const error: MaybeError = new Error('bad')
-const resultTuple: ResultTuple<number> = toTuple({ result })
+const resultTuple: ResultTuple<number> = toTuple({ result }) // [1, undefined]
 // OR
-const resultTuple: ResultTuple<number> = toTuple({ error })
+const resultTuple: ResultTuple<number> = toTuple({ error }) // [undefined, new Error('bad')]
 
 // Say goodbye to try/catch and use it this way
 const aPromise = async (): Promise<ResultTuple<number>> =>
     Promise.resolve(toTuple({ result: 1 }))
 
-const fn7 = async (): Promise<any> => {
+const fn = async (): Promise<any> => {
     const [result, error] = await aPromise()
     if (error) {
         // do something with error
