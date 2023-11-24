@@ -1,4 +1,5 @@
 # ts-utils
+
 A typescript utility library to help utilize functional programming concepts by re-creating monads like Option (Scala), Either (Scala) and Result (Rust) in Typescript.
 
 # Installation
@@ -8,7 +9,7 @@ A typescript utility library to help utilize functional programming concepts by 
 ```
 npm i @universal-apps/ts-utils
 # OR
-pnpm i @universal-apps/ts-utils 
+pnpm i @universal-apps/ts-utils
 ```
 
 ## Library
@@ -25,7 +26,7 @@ pnpm i @universal-apps/ts-utils
 
 ```typescript
 // Option
-const someValue: Option<number> = some(1) // { value: 1 }
+const someValue: Option<number> = some(42) // { value: 42 }
 const noValue: Option<number> = none() // {}
 
 // Utilities to match on the Option type
@@ -35,7 +36,7 @@ matchOptionF({
 })(someValue)
 
 // Either
-const rightFn = (): Either<Error, number> => right(1) // { value: 1 }
+const rightFn = (): Either<Error, number> => right(42) // { value: 42 }
 const leftFn = (): Either<Error, number> => left(new Error('bad')) // { error: Error('bad) }
 
 // Utilities to match on the Either type
@@ -45,8 +46,8 @@ matchEitherF<Error, number, Error, number>({
 })(rightFn)
 
 // Result
-const okFn = (): Result<number, Error> => ok(1)
-const errFn = (): Result<number, Error> => err(new Error('bad'))
+const okFn = (): Result<number, Error> => ok(42) // { value: 42 }
+const errFn = (): Result<number, Error> => err(new Error('bad')) // { error: Error('bad') }
 
 // Utilities to match on the Result type
 matchResultF({
@@ -60,8 +61,9 @@ matchResultF<number, Error, number, Error>({
 })(okFn())
 
 // Result Tuple
-const result: MaybeResult<number> = 1
-const error: MaybeError = new Error('bad')
+const result: ResultT<number> = 1 // 1
+const error: ErrorT = new Error('bad') // Error('bad')
+
 const resultTuple: ResultTuple<number> = toTuple({ result }) // [1, undefined]
 // OR
 const resultTuple: ResultTuple<number> = toTuple({ error }) // [undefined, new Error('bad')]
@@ -74,8 +76,10 @@ const fn = async (): Promise<any> => {
     const [result, error] = await aPromise()
     if (error) {
         // do something with error
+        throw error
     } else {
         // do something with result
+        console.log(`Result is ${result}`)
     }
 }
 ```
