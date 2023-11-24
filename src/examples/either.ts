@@ -2,7 +2,7 @@ import { right, left, Either, matchEitherF } from '../lib'
 import { andThen, pipe } from 'ramda'
 
 // EITHER
-const rightFn = (): Either<Error, number> => right(1) // { value: 1 }
+const rightFn = (): Either<Error, number> => right(42) // { value: 42 }
 const leftFn = (): Either<Error, number> => left(new Error('bad')) // { error: Error('bad) }
 
 const inputFn = (input: number) => input
@@ -16,7 +16,7 @@ const syncPipeline1 = pipe(
         right: (result) => inputFn(result),
         left: (err) => err,
     }),
-) // { value: 1 } => inputFn(1) => 1
+) // { value: 42 } => inputFn(42) => 42
 
 const syncPipeline2 = pipe(
     leftFn,
@@ -44,7 +44,7 @@ const asyncPipeline1 = pipe(
             left: (err) => err,
         }),
     ),
-) // { value: 1 } => 1
+) // { value: 42 } => 42
 
 const asyncPipeline2 = pipe(
     leftPromise,
@@ -65,7 +65,7 @@ const asyncPipeline3 = pipe(
             left: (err) => err,
         }),
     ),
-) // { value: 1 } => input(1) => 1
+) // { value: 42 } => input(42) => 42
 
 asyncPipeline1().then((result) =>
     console.log(`[EITHER] asyncPipeline1 is ${JSON.stringify(result)}`),

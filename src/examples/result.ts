@@ -2,7 +2,7 @@ import { ok, err, matchResultF, Result } from '../lib'
 import { andThen, pipe } from 'ramda'
 
 // RESULT
-const okFn = (): Result<number, Error> => ok(1)
+const okFn = (): Result<number, Error> => ok(42)
 const errFn = (): Result<number, Error> => err(new Error('bad'))
 const rinputFn = (input: number) => input
 
@@ -15,7 +15,7 @@ const rsyncPipeline1 = pipe(
         ok: (result) => rinputFn(result),
         err: (err) => err,
     }),
-) // { value: 1 } => rinputFn(1) => 1
+) // { value: 42 } => rinputFn(42) => 42
 
 const rsyncPipeline2 = pipe(
     errFn,
@@ -43,7 +43,7 @@ const rasyncPipeline1 = pipe(
             err: (err) => err,
         }),
     ),
-) // { value: 1 } => 1
+) // { value: 42 } => 42
 
 const rasyncPipeline2 = pipe(
     rleftPromise,
@@ -64,7 +64,7 @@ const rasyncPipeline3 = pipe(
             err: (err) => err,
         }),
     ),
-) // { value: 1 } => rinput(1) => 1
+) // { value: 42 } => rinput(42) => 42
 
 rasyncPipeline1().then((result) =>
     console.log(`[RESULT] rasyncPipeline1 is ${JSON.stringify(result)}`),

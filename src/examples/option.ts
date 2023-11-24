@@ -2,7 +2,7 @@ import { Option, some, none, matchOptionF } from '../lib'
 import { pipe } from 'ramda'
 
 // OPTION
-const someValue: Option<number> = some(1) // { value: 1 }
+const someValue: Option<number> = some(42) // { value: 42 }
 const noValue: Option<number> = none() // {}
 
 console.log(`[OPTION] someValue is ${JSON.stringify(someValue)}`)
@@ -14,7 +14,7 @@ const optionPipeline1 = pipe(
         some: (value) => value,
         none: () => undefined,
     }),
-) // some(1) aka { value: 1 } => 1
+) // some(42) aka { value: 42 } => 42
 
 const optionPipeline2 = pipe(
     () => noValue,
