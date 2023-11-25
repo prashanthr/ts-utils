@@ -1,6 +1,6 @@
 {
     "name": "@universal-apps/ts-utils",
-    "version": "1.1.2",
+    "version": "1.1.3",
     "description": "A Typescript utility library with some utility functions to level up your dev ex using functional programming",
     "repository": {
         "type": "git",
