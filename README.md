@@ -61,16 +61,16 @@ matchResultF<number, Error, number, Error>({
 })(okFn())
 
 // Result Tuple
-const result: ResultT<number> = 1 // 1
+const result: ResultT<number> = 42 // 1
 const error: ErrorT = new Error('bad') // Error('bad')
 
-const resultTuple: ResultTuple<number> = toTuple({ result }) // [1, undefined]
+const resultTuple: ResultTuple<number> = toTuple({ result }) // [42, undefined]
 // OR
 const resultTuple: ResultTuple<number> = toTuple({ error }) // [undefined, new Error('bad')]
 
 // Say goodbye to try/catch and use it this way
 const aPromise = async (): Promise<ResultTuple<number>> =>
-    Promise.resolve(toTuple({ result: 1 }))
+    Promise.resolve(toTuple({ result: 42 }))
 
 const fn = async (): Promise<any> => {
     const [result, error] = await aPromise()
