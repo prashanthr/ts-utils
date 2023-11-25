@@ -2,6 +2,8 @@
 
 A typescript utility library to help utilize functional programming concepts by re-creating monads like Option (Scala), Either (Scala) and Result (Rust) in Typescript.
 
+Check out the [blog post](https://dev.to/prashanthr/level-up-your-typescript-game-functionally-part-1-57g4) for a good overview.
+
 # Installation
 
 [NPM package](https://www.npmjs.com/package/@universal-apps/ts-utils)
