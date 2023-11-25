@@ -24,9 +24,8 @@ export {
 
 // Result Tuple
 export type {
-    EmptyResult,
-    MaybeResult,
-    MaybeError,
+    Result as ResultT,
+    Err as ErrorT,
     ResultTuple,
     TupleArgs,
 } from './result-tuple'

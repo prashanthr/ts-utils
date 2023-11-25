@@ -1,15 +1,8 @@
-import { MaybeResult, MaybeError, ResultTuple, toTuple } from '../lib'
+import { ResultT, ErrorT, ResultTuple, TupleArgs, toTuple } from '../lib'
 
-const maybeResult: MaybeResult<number> = 1
-const maybeResult2: MaybeResult<number> = undefined
-const maybeResult3: MaybeResult<number> = null
-const maybeResult4: MaybeResult<number, 'bar'> = 'bar'
-
-const maybeError: MaybeError = new Error('e')
-const maybeError2: MaybeError = undefined
-const maybeError3: MaybeError<Error> = new Error('e')
-const maybeError4: MaybeError<Error> = undefined
-const maybeError5: MaybeError<Error, 'bar'> = 'bar'
+const result: ResultT<number> = 42
+const error: ErrorT = new Error('e')
+const error2: ErrorT<Error> = new Error('e')
 
 class CustomError extends Error {
     constructor(msg: string) {
@@ -17,21 +10,22 @@ class CustomError extends Error {
         Object.setPrototypeOf(this, CustomError.prototype)
     }
 }
-const maybeError6: MaybeError<CustomError> = new CustomError('custom error')
+const error3: ErrorT<CustomError> = new CustomError('custom error')
 
-const resultTuple: ResultTuple<number> = [1, undefined]
-const resultTuple2: ResultTuple<number, Error> = [1, undefined]
+const resultTuple: ResultTuple<number> = [42, undefined]
+const resultTuple2: ResultTuple<number, Error> = [42, undefined]
 const resultTuple3: ResultTuple<number> = [undefined, new Error('e')]
 const resultTuple4: ResultTuple<number, Error> = [undefined, new Error('e')]
-const resultTuple5: ResultTuple<number, Error, 'baz'> = [1, 'baz']
-const resultTuple6: ResultTuple<number, Error, 'baz'> = ['baz', new Error('e')]
 
 const fn1 = (): ResultTuple<number> => {
-    return toTuple({ result: 1 }) // [1, undefined]
+    return toTuple({ result: 42 }) // [42, undefined]
 }
 
 const fn2 = (): ResultTuple<number> => {
-    return toTuple({ result: 1, error: undefined }) // [1, undefined]
+    return toTuple<number>({
+        result: 42,
+        error: undefined,
+    }) // [42, undefined]
 }
 
 const fn3 = (): ResultTuple<number> => {
@@ -43,7 +37,7 @@ const fn4 = (): ResultTuple<number> => {
 }
 
 const fn5 = (): ResultTuple<number, Error> => {
-    return toTuple({}) // [undefined, undefined]
+    return toTuple({}) // throws Error
 }
 
 const fn6 = (): ResultTuple<number, 'baz'> => {
@@ -51,7 +45,7 @@ const fn6 = (): ResultTuple<number, 'baz'> => {
 }
 
 const aPromise = async (): Promise<ResultTuple<number>> =>
-    Promise.resolve(toTuple({ result: 1 }))
+    Promise.resolve(toTuple({ result: 42 }))
 
 const fn7 = async (): Promise<any> => {
     const [result, error] = await aPromise()
