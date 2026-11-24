@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ts-utils: Option, Either and Result types for TypeScript</title>
+<meta name="description" content="A small TypeScript library that brings Option, Either and Result types to everyday code, so errors and missing values are part of the type signature.">
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1d2129; --muted: #5d6573; --line: #e3e6eb;
+    --code-bg: #f6f7f9; --accent: #2b5fd9;
+    --c-kw: #a626a4; --c-str: #2f7d32; --c-cmt: #8a919d; --c-num: #b25b00; --c-fn: #2b5fd9; --c-ty: #0b7285;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14161a; --fg: #e6e8ec; --muted: #98a1af; --line: #2a2e35;
+      --code-bg: #1b1e24; --accent: #7aa2ff;
+      --c-kw: #d69cf0; --c-str: #8fce8f; --c-cmt: #6f7785; --c-num: #e0a45c; --c-fn: #7aa2ff; --c-ty: #6cc4d6;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 var(--sans); }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+  header.top { border-bottom: 1px solid var(--line); }
+  header.top .wrap { display: flex; justify-content: space-between; align-items: center; height: 56px; }
+  .brand { font: 600 16px var(--mono); color: var(--fg); }
+  nav a { margin-left: 18px; font-size: 14px; color: var(--muted); }
+  nav a:hover { color: var(--fg); text-decoration: none; }
+  .hero { padding: 64px 0 40px; }
+  h1 { font-size: 34px; line-height: 1.2; margin: 0 0 14px; letter-spacing: -0.01em; }
+  .lead { font-size: 18px; color: var(--muted); margin: 0 0 28px; max-width: 620px; }
+  .install { display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px; padding: 10px 14px;
+    font: 14px var(--mono); max-width: 460px; }
+  .install .prompt { color: var(--muted); user-select: none; margin-right: 8px; }
+  button.copy { font: 12px var(--sans); color: var(--muted); background: none; border: 1px solid var(--line);
+    border-radius: 4px; padding: 3px 8px; cursor: pointer; }
+  button.copy:hover { color: var(--fg); border-color: var(--muted); }
+  .links { margin-top: 16px; font-size: 14px; }
+  .links a { margin-right: 18px; }
+  section { padding: 36px 0; border-top: 1px solid var(--line); }
+  h2 { font-size: 22px; margin: 0 0 8px; }
+  h3 { font-size: 16px; margin: 28px 0 6px; }
+  p { margin: 0 0 14px; }
+  .muted { color: var(--muted); }
+  code { font: 0.9em var(--mono); background: var(--code-bg); padding: 1px 5px; border-radius: 3px; }
+  pre { margin: 0; padding: 16px 18px; background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px;
+    overflow-x: auto; font: 13.5px/1.65 var(--mono); tab-size: 2; }
+  pre code { background: none; padding: 0; font: inherit; }
+  .k { color: var(--c-kw); } .s { color: var(--c-str); } .c { color: var(--c-cmt); font-style: italic; }
+  .n { color: var(--c-num); } .f { color: var(--c-fn); } .t { color: var(--c-ty); }
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .compare > div { min-width: 0; }
+  .compare .label { font: 600 12px var(--sans); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 6px; }
+  @media (max-width: 640px) { .compare { grid-template-columns: 1fr; } h1 { font-size: 28px; } }
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin-bottom: 14px; overflow-x: auto; }
+  .tab { font: 14px var(--mono); background: none; border: 0; border-bottom: 2px solid transparent; color: var(--muted);
+    padding: 8px 12px; cursor: pointer; white-space: nowrap; }
+  .tab:hover { color: var(--fg); }
+  .tab[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--accent); }
+  .panel[hidden] { display: none; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-weight: 600; color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+  td:first-child { font-family: var(--mono); white-space: nowrap; }
+  footer { border-top: 1px solid var(--line); padding: 28px 0 48px; font-size: 14px; color: var(--muted); }
+  footer a { color: var(--muted); text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#">ts-utils</a>
+    <nav>
+      <a href="#why">Why</a>
+      <a href="#types">Types</a>
+      <a href="#api">API</a>
+      <a href="https://github.com/prashanthr/ts-utils">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="hero">
+    <h1>Option, Either and Result for TypeScript</h1>
+    <p class="lead">A small library that puts missing values and failures into the type signature, so the compiler can check that you handled them.</p>
+
+    <div class="install">
+      <span><span class="prompt">$</span><span id="cmd">npm i @universal-apps/ts-utils</span></span>
+      <button class="copy" id="copy" type="button">Copy</button>
+    </div>
+    <div class="links">
+      <a href="https://github.com/prashanthr/ts-utils">Source on GitHub</a>
+      <a href="https://www.npmjs.com/package/@universal-apps/ts-utils">npm</a>
+      <a href="https://dev.to/prashanthr/level-up-your-typescript-game-functionally-part-1-57g4">Blog post</a>
+    </div>
+  </div>
+
+  <section id="why">
+    <h2>Why</h2>
+    <p>A function that can throw looks identical to one that cannot. Nothing in its signature tells the caller to expect a failure, so handling it is a matter of memory and convention.</p>
+    <p>With a <code>Result</code> the failure is part of the return type. The caller has to deal with both cases before the value can be used.</p>
+
+    <div class="compare">
+      <div>
+        <div class="label">Before</div>
+<pre><code><span class="k">function</span> <span class="f">parsePort</span>(input: <span class="t">string</span>): <span class="t">number</span> {
+  <span class="k">const</span> n = <span class="f">Number</span>(input)
+  <span class="k">if</span> (<span class="f">Number.isNaN</span>(n)) {
+    <span class="k">throw new</span> <span class="f">Error</span>(<span class="s">'not a number'</span>)
+  }
+  <span class="k">return</span> n
+}
+
+<span class="c">// Nothing here says it can fail</span>
+<span class="k">const</span> port = <span class="f">parsePort</span>(raw)</code></pre>
+      </div>
+      <div>
+        <div class="label">After</div>
+<pre><code><span class="k">function</span> <span class="f">parsePort</span>(input: <span class="t">string</span>): <span class="t">Result</span>&lt;<span class="t">number</span>&gt; {
+  <span class="k">const</span> n = <span class="f">Number</span>(input)
+  <span class="k">return</span> <span class="f">Number.isNaN</span>(n)
+    ? <span class="f">err</span>(<span class="k">new</span> <span class="f">Error</span>(<span class="s">'not a number'</span>))
+    : <span class="f">ok</span>(n)
+}
+
+<span class="c">// The signature says it can fail</span>
+<span class="k">const</span> port = <span class="f">matchResultF</span>({
+  ok: (n) =&gt; n,
+  err: () =&gt; <span class="n">3000</span>,
+})(<span class="f">parsePort</span>(raw))</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <section id="types">
+    <h2>The types</h2>
+    <p class="muted">Each type is a plain object, so values serialize and log without ceremony.</p>
+
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" aria-selected="true"  data-p="option">Option</button>
+      <button class="tab" role="tab" aria-selected="false" data-p="result">Result</button>
+      <button class="tab" role="tab" aria-selected="false" data-p="either">Either</button>
+      <button class="tab" role="tab" aria-selected="false" data-p="tuple">ResultTuple</button>
+    </div>
+
+    <div class="panel" id="option">
+      <p>A value that may be absent. <code>some(x)</code> is <code>{ value: x }</code>, <code>none()</code> is <code>{}</code>.</p>
+<pre><code><span class="k">import</span> { some, none, matchOptionF, <span class="k">type</span> <span class="t">Option</span> } <span class="k">from</span> <span class="s">'@universal-apps/ts-utils'</span>
+
+<span class="k">const</span> find = (id: <span class="t">number</span>): <span class="t">Option</span>&lt;<span class="t">string</span>&gt; =&gt;
+  id === <span class="n">1</span> ? <span class="f">some</span>(<span class="s">'Ada'</span>) : <span class="f">none</span>()
+
+<span class="k">const</span> label = <span class="f">matchOptionF</span>({
+  some: (name) =&gt; <span class="s">`Hello, ${name}`</span>,
+  none: () =&gt; <span class="s">'Unknown user'</span>,
+})(<span class="f">find</span>(<span class="n">1</span>))
+<span class="c">// "Hello, Ada"</span></code></pre>
+    </div>
+
+    <div class="panel" id="result" hidden>
+      <p>An operation that succeeds with a value or fails with an error. Modeled on Rust's <code>Result</code>.</p>
+<pre><code><span class="k">import</span> { ok, err, matchResultF, <span class="k">type</span> <span class="t">Result</span> } <span class="k">from</span> <span class="s">'@universal-apps/ts-utils'</span>
+
+<span class="k">const</span> divide = (a: <span class="t">number</span>, b: <span class="t">number</span>): <span class="t">Result</span>&lt;<span class="t">number</span>, <span class="t">Error</span>&gt; =&gt;
+  b === <span class="n">0</span> ? <span class="f">err</span>(<span class="k">new</span> <span class="f">Error</span>(<span class="s">'divide by zero'</span>)) : <span class="f">ok</span>(a / b)
+
+<span class="f">matchResultF</span>({
+  ok: (value) =&gt; console.<span class="f">log</span>(value),
+  err: (e) =&gt; console.<span class="f">error</span>(e.message),
+})(<span class="f">divide</span>(<span class="n">10</span>, <span class="n">4</span>))
+<span class="c">// 2.5</span></code></pre>
+    </div>
+
+    <div class="panel" id="either" hidden>
+      <p>One of two outcomes, in the style of Scala's <code>Either</code>. <code>right(x)</code> is <code>{ value: x }</code>, <code>left(e)</code> is <code>{ error: e }</code>.</p>
+<pre><code><span class="k">import</span> { right, left, matchEitherF, <span class="k">type</span> <span class="t">Either</span> } <span class="k">from</span> <span class="s">'@universal-apps/ts-utils'</span>
+
+<span class="k">const</span> validate = (age: <span class="t">number</span>): <span class="t">Either</span>&lt;<span class="t">Error</span>, <span class="t">number</span>&gt; =&gt;
+  age &gt;= <span class="n">0</span> ? <span class="f">right</span>(age) : <span class="f">left</span>(<span class="k">new</span> <span class="f">Error</span>(<span class="s">'age must be positive'</span>))
+
+<span class="k">const</span> message = <span class="f">matchEitherF</span>&lt;<span class="t">Error</span>, <span class="t">number</span>, <span class="t">string</span>, <span class="t">string</span>&gt;({
+  right: (age) =&gt; <span class="s">`Age ${age}`</span>,
+  left: (e) =&gt; e.message,
+})(<span class="f">validate</span>(<span class="n">-1</span>))
+<span class="c">// "age must be positive"</span></code></pre>
+    </div>
+
+    <div class="panel" id="tuple" hidden>
+      <p>A <code>[result, error]</code> pair for async code, so you can skip <code>try/catch</code> and branch on the error directly.</p>
+<pre><code><span class="k">import</span> { toTuple, <span class="k">type</span> <span class="t">ResultTuple</span> } <span class="k">from</span> <span class="s">'@universal-apps/ts-utils'</span>
+
+<span class="k">const</span> load = <span class="k">async</span> (): <span class="t">Promise</span>&lt;<span class="t">ResultTuple</span>&lt;<span class="t">number</span>&gt;&gt; =&gt; {
+  <span class="k">try</span> {
+    <span class="k">return</span> <span class="f">toTuple</span>({ result: <span class="k">await</span> <span class="f">fetchCount</span>() })
+  } <span class="k">catch</span> (error) {
+    <span class="k">return</span> <span class="f">toTuple</span>({ error: error <span class="k">as</span> <span class="t">Error</span> })
+  }
+}
+
+<span class="k">const</span> [count, error] = <span class="k">await</span> <span class="f">load</span>()
+<span class="k">if</span> (error) <span class="k">throw</span> error
+console.<span class="f">log</span>(<span class="s">`Count is ${count}`</span>)</code></pre>
+    </div>
+  </section>
+
+  <section id="api">
+    <h2>API</h2>
+    <table>
+      <thead><tr><th>Export</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td>some(value)</td><td>Builds an <code>Option</code> holding a value.</td></tr>
+        <tr><td>none()</td><td>Builds an empty <code>Option</code>.</td></tr>
+        <tr><td>matchOption, matchOptionF</td><td>Match on <code>some</code> / <code>none</code>.</td></tr>
+        <tr><td>ok(value), err(error)</td><td>Build a <code>Result</code>.</td></tr>
+        <tr><td>matchResult, matchResultF</td><td>Match on <code>ok</code> / <code>err</code>.</td></tr>
+        <tr><td>right(value), left(error)</td><td>Build an <code>Either</code>.</td></tr>
+        <tr><td>matchEither, matchEitherF</td><td>Match on <code>right</code> / <code>left</code>.</td></tr>
+        <tr><td>toTuple({ result, error })</td><td>Builds a <code>ResultTuple</code>. Throws if neither is given.</td></tr>
+      </tbody>
+    </table>
+    <p class="muted" style="margin-top:14px">The <code>F</code> variants are curried: pass the matchers first, then the value. The plain variants take <code>{ result, matchers }</code> in one call. Requires Node 16 or newer. No runtime dependencies. MIT licensed.</p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    Built by <a href="https://github.com/prashanthr">Prashanth R.</a>
+    · <a href="https://github.com/prashanthr/ts-utils">GitHub</a>
+    · <a href="https://www.npmjs.com/package/@universal-apps/ts-utils">npm</a>
+    · Inspired by <a href="https://imhoff.blog/posts/using-results-in-typescript">Dan Imhoff</a>
+  </div>
+</footer>
+
+<script>
+  var tabs = document.querySelectorAll('.tab');
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () {
+      tabs.forEach(function (x) { x.setAttribute('aria-selected', x === t ? 'true' : 'false'); });
+      document.querySelectorAll('.panel').forEach(function (p) { p.hidden = p.id !== t.dataset.p; });
+    });
+  });
+  document.getElementById('copy').addEventListener('click', function () {
+    var b = this, text = document.getElementById('cmd').textContent;
+    var done = function () { b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy'; }, 1500); };
+    if (navigator.clipboard) { navigator.clipboard.writeText(text).then(done, function () {}); }
+  });
+</script>
+</body>
+</html>
