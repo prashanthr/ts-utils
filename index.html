@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ts-utils: Option, Either and Result types for TypeScript</title>
 <meta name="description" content="A small TypeScript library that brings Option, Either and Result types to everyday code, so errors and missing values are part of the type signature.">
+<script>
+  try { var t = localStorage.getItem('theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+</script>
 <style>
   :root {
     --bg: #ffffff; --fg: #1d2129; --muted: #5d6573; --line: #e3e6eb;
@@ -13,12 +16,20 @@
     --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
     --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   }
+  :root { color-scheme: light dark; }
+  :root[data-theme="light"] { color-scheme: light; }
+  :root[data-theme="dark"] { color-scheme: dark; }
   @media (prefers-color-scheme: dark) {
-    :root {
+    :root:not([data-theme="light"]) {
       --bg: #14161a; --fg: #e6e8ec; --muted: #98a1af; --line: #2a2e35;
       --code-bg: #1b1e24; --accent: #7aa2ff;
       --c-kw: #d69cf0; --c-str: #8fce8f; --c-cmt: #6f7785; --c-num: #e0a45c; --c-fn: #7aa2ff; --c-ty: #6cc4d6;
     }
+  }
+  :root[data-theme="dark"] {
+      --bg: #14161a; --fg: #e6e8ec; --muted: #98a1af; --line: #2a2e35;
+      --code-bg: #1b1e24; --accent: #7aa2ff;
+      --c-kw: #d69cf0; --c-str: #8fce8f; --c-cmt: #6f7785; --c-num: #e0a45c; --c-fn: #7aa2ff; --c-ty: #6cc4d6;
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
@@ -31,6 +42,9 @@
   .brand { font: 600 16px var(--mono); color: var(--fg); }
   nav a { margin-left: 18px; font-size: 14px; color: var(--muted); }
   nav a:hover { color: var(--fg); text-decoration: none; }
+  .theme { margin-left: 18px; background: none; border: 1px solid var(--line); border-radius: 4px; color: var(--muted);
+    font: 13px var(--sans); padding: 3px 9px; cursor: pointer; }
+  .theme:hover { color: var(--fg); border-color: var(--muted); }
   .hero { padding: 64px 0 40px; }
   h1 { font-size: 34px; line-height: 1.2; margin: 0 0 14px; letter-spacing: -0.01em; }
   .lead { font-size: 18px; color: var(--muted); margin: 0 0 28px; max-width: 620px; }
@@ -82,6 +96,7 @@
       <a href="#types">Types</a>
       <a href="#api">API</a>
       <a href="https://github.com/prashanthr/ts-utils">GitHub</a>
+      <button class="theme" id="theme" type="button" aria-label="Toggle color theme">Theme</button>
     </nav>
   </div>
 </header>
@@ -241,6 +256,20 @@ console.<span class="f">log</span>(<span class="s">`Count is ${count}`</span>)</
 </footer>
 
 <script>
+  (function () {
+    var root = document.documentElement, btn = document.getElementById('theme');
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    function current() { return root.getAttribute('data-theme') || (mq.matches ? 'dark' : 'light'); }
+    function label() { btn.textContent = current() === 'dark' ? 'Light mode' : 'Dark mode'; }
+    btn.addEventListener('click', function () {
+      var next = current() === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+      label();
+    });
+    mq.addEventListener && mq.addEventListener('change', label);
+    label();
+  })();
   var tabs = document.querySelectorAll('.tab');
   tabs.forEach(function (t) {
     t.addEventListener('click', function () {
